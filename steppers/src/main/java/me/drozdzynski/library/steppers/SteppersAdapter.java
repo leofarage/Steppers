@@ -52,12 +52,21 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     private int beforeStep = -1;
     private int currentStep = 0;
 
-    public SteppersAdapter(SteppersView steppersView, SteppersView.Config config, List<SteppersItem> items) {
+    private int collapsedLayoutId;
+    private int expandedLayoutId;
+
+    public SteppersAdapter(SteppersView steppersView, SteppersView.Config config, List<SteppersItem> items, int collapsedLayoutId, int expandedLayoutId) {
         this.steppersView = steppersView;
         this.context = steppersView.getContext();
         this.config = config;
         this.items = items;
         this.fragmentManager = config.getFragmentManager();
+        this.collapsedLayoutId = collapsedLayoutId;
+        this.expandedLayoutId = expandedLayoutId;
+    }
+
+    public SteppersAdapter(SteppersView steppersView, SteppersView.Config config, List<SteppersItem> items) {
+        this(steppersView, config, items, R.layout.steppers_item, R.layout.steppers_item_expanded);
     }
 
     @Override
@@ -70,10 +79,10 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         View v = null;
         if (viewType == VIEW_COLLAPSED) {
             v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.steppers_item, parent, false);
+                    .inflate(collapsedLayoutId, parent, false);
         } else {
             v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.steppers_item_expanded, parent, false);
+                    .inflate(expandedLayoutId, parent, false);
         }
 
         SteppersViewHolder vh = new SteppersViewHolder(v);

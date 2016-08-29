@@ -18,15 +18,14 @@ package me.drozdzynski.library.steppers;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -38,23 +37,40 @@ public class SteppersView extends LinearLayout {
 
     private Config config;
     private List<SteppersItem> items;
+    private int mExpandedLayout;
+    private int mCollapsedLayout;
 
     public SteppersView(Context context) {
         super(context);
+        setup(context, null, 0, 0);
     }
 
     public SteppersView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setup(context, attrs, 0, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public SteppersView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setup(context, attrs, defStyleAttr, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public SteppersView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        setup(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    private void setup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        final TypedArray a = context
+                .obtainStyledAttributes(attrs, R.styleable.SteppersView);
+        mExpandedLayout = a.getResourceId(R.styleable.SteppersView_steppers_expandedLayout,
+                R.layout.steppers_item_expanded);
+        mCollapsedLayout = a.getResourceId(R.styleable.SteppersView_steppers_collapsedLayout,
+                R.layout.steppers_item);
+
+        a.recycle();
     }
 
     public SteppersView setConfig(Config config) {
@@ -89,7 +105,7 @@ public class SteppersView extends LinearLayout {
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            steppersAdapter = new SteppersAdapter(this, config, items);
+            steppersAdapter = new SteppersAdapter(this, config, items, mCollapsedLayout, mExpandedLayout);
             //steppersAdapter.setPossitiveButtonEnable(possitiveButtonEnable);
 
             recyclerView.setAdapter(steppersAdapter);

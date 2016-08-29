@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="SteppersView">
+		<attr name="steppers_collapsedLayout" type="layout" format="reference"/>
+		<attr name="steppers_expandedLayout" type="layout" format="reference"/>
+	</declare-styleable>
+</resources>
